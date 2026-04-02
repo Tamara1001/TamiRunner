@@ -99,6 +99,14 @@ public class LevelManager : MonoBehaviour
             // Mathematically snap it exactly to the end of the line (Zero gaps!)
             oldestChunk.transform.position = new Vector3(0, 0, nextSpawnZ);
 
+            // ==========================================
+            ChunkModule module = oldestChunk.GetComponent<ChunkModule>();
+            if (module != null)
+            {
+                module.ResetChunk();
+            }
+            // ==========================================
+
             // Send it to the back of the line
             activeChunks.Enqueue(oldestChunk);
 
