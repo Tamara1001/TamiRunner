@@ -5,8 +5,17 @@ using UnityEngine;
 /// Assumes the player object stays at Z=0 and the world moves towards them.
 /// </summary>
 [RequireComponent(typeof(CapsuleCollider))]
+
 public class PlayerController : MonoBehaviour
 {
+    [Header("Collision & Health")]
+    [Tooltip("Duration of Invincibility Frames in seconds after taking damage")]
+    public float iframeDuration = 1.5f;
+
+    // Internal tracker for invincibility
+    private bool isInvincible = false;
+    private float iframeTimer = 0f;
+
     [Header("Lane Settings")]
     [Tooltip("Distance in Unity units between each lane")]
     public float laneDistance = 2.5f;
@@ -55,6 +64,7 @@ public class PlayerController : MonoBehaviour
         HandleInput();
         HandleSlideTimer();
         ApplyMovement();
+        HandleIFrames();
     }
 
     /// <summary>
@@ -176,4 +186,69 @@ public class PlayerController : MonoBehaviour
         // Keep Z strictly at 0 as defined in the GDD
         transform.position = new Vector3(newX, newY, 0f);
     }
+
+    /// <summary>
+    /// Processes the Invincibility Frame timer to protect the player from multi-hit triggers.
+    /// </summary>
+    private void HandleIFrames()
+    {
+        if (isInvincible)
+        {
+            iframeTimer -= Time.deltaTime;
+
+            // (Optional Polish) You could toggle the MeshRenderer here to make Ambu flash!
+
+            if (iframeTimer <= 0f)
+            {
+                isInvincible = false;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Detects physical intersections with Pickups and Obstacles using Unity Triggers.
+    /// </summary>
+    private void OnTriggerEnter(Collider other)
+    {
+        // 1. OBSTACLES (Carriages, Stalls, Signs)
+        if (other.CompareTag("Obstacle"))
+        {
+            // Abort collision if we are currently invincible
+            if (isInvincible) return;
+
+            // Trigger damage in Game Manager
+            GameManager.Instance.TakeDamage();
+
+            // Provide immediate I-Frames so a long carriage doesn't instantly kill Ambu
+            isInvincible = true;
+            iframeTimer = iframeDuration;
+
+            // Notice: We DO NOT destroy or disable the obstacle. The player passes through safely.
+        }
+
+        // 2. COINS
+        else if (other.CompareTag("Coin"))
+        {
+            GameManager.Instance.AddScore(50f);
+
+            // SetActive(false) keeps it in memory so it can be re-enabled when the LevelManager recycles the chunk!
+            other.gameObject.SetActive(false);
+        }
+
+        // 3. LIFE POTION
+        else if (other.CompareTag("Life"))
+        {
+            GameManager.Instance.AddLife();
+            other.gameObject.SetActive(false);
+        }
+
+        // 4. SCORE MULTIPLIER
+        else if (other.CompareTag("Multiplier"))
+        {
+            // Activate a x2 Score Multiplier
+            GameManager.Instance.ActivateMultiplier(2f);
+            other.gameObject.SetActive(false);
+        }
+    }
+
 }
