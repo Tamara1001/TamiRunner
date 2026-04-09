@@ -383,58 +383,6 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
---- !u!1 &532085898 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4791423651416698990, guid: d47b228ee7c965443bf7f00fea7391df, type: 3}
-  m_PrefabInstance: {fileID: 4084535674165988370}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &532085899
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 532085898}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f4ebb8464c9a8d44a9c3d7be8cb4986, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  iframeDuration: 1.5
-  laneDistance: 2.5
-  laneSwitchSpeed: 15
-  jumpForce: 8
-  gravity: -20
-  slideDuration: 1
-  slideHeight: 1
-  slideCenter: {x: 0, y: 0.5, z: 0}
---- !u!54 &532085904
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 532085898}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &719991307
 GameObject:
   m_ObjectHideFlags: 0
@@ -1015,7 +963,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1725501753
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1329,17 +1277,11 @@ PrefabInstance:
     - target: {fileID: 8518502659660214991, guid: d47b228ee7c965443bf7f00fea7391df, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 54423067e1c38894288de286746a8ba8, type: 2}
+      objectReference: {fileID: 2100000, guid: 3f6b5d152e9ae1542b734ea4f22d8c4e, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4791423651416698990, guid: d47b228ee7c965443bf7f00fea7391df, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 532085899}
-    - targetCorrespondingSourceObject: {fileID: 4791423651416698990, guid: d47b228ee7c965443bf7f00fea7391df, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 532085904}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d47b228ee7c965443bf7f00fea7391df, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
