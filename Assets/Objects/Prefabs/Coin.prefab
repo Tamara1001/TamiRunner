@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7126789525062048315}
   - component: {fileID: 2792139610633245377}
   - component: {fileID: 7972242713109203695}
+  - component: {fileID: 2897008786534198721}
   m_Layer: 0
   m_Name: Coin
   m_TagString: Coin
@@ -112,3 +113,18 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2897008786534198721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9062652494815365127}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dd7f2159cd02104d868947a53e6ccc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PickupAnimator
+  rotationSpeed: 100
+  bobAmplitude: 0.5
+  bobFrequency: 2

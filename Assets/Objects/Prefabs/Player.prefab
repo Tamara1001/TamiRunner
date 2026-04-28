@@ -129,6 +129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   iframeDuration: 1.5
+  visuals: {fileID: 0}
   laneDistance: 2.5
   laneSwitchSpeed: 15
   jumpForce: 8

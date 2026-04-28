@@ -17,6 +17,9 @@ public class PlayerController : MonoBehaviour
     private bool isInvincible = false;
     private float iframeTimer = 0f;
 
+    [Header("Visuals")]
+    public PlayerVisuals visuals;
+
     [Header("Lane Settings")]
     [Tooltip("Distance in Unity units between each lane")]
     public float laneDistance = 2.5f;
@@ -120,6 +123,7 @@ public class PlayerController : MonoBehaviour
     {
         isGrounded = false;
         verticalVelocity = jumpForce;
+        if (visuals != null) visuals.TriggerJumpSquash();
     }
 
     private void StartSlide()
@@ -181,6 +185,11 @@ public class PlayerController : MonoBehaviour
         // Note: For uneven terrain, you'd replace this with a Physics.SphereCast downwards.
         if (newY <= 0f)
         {
+            if (!isGrounded && verticalVelocity < 0f)
+            {
+                if (visuals != null) visuals.TriggerLandSquash();
+            }
+
             newY = 0f;
             verticalVelocity = 0f;
             isGrounded = true;
@@ -227,16 +236,17 @@ public class PlayerController : MonoBehaviour
             isInvincible = true;
             iframeTimer = iframeDuration;
 
-            // Notice: We DO NOT destroy or disable the obstacle. The player passes through safely.
+            // Trigger Visual Juice
+            if (visuals != null) visuals.TriggerDamageVisuals(iframeDuration);
+            if (CameraShake.Instance != null) CameraShake.Instance.Shake(0.3f, 0.4f);
         }
 
         // 2. COINS
         else if (other.CompareTag("Coin"))
         {
             GameManager.Instance.AddScore(50f);
-
-            // SetActive(false) keeps it in memory so it can be re-enabled when the LevelManager recycles the chunk!
             other.gameObject.SetActive(false);
+            if (VFXManager.Instance != null) VFXManager.Instance.PlayPickupEffect(other.transform.position);
         }
 
         // 3. LIFE POTION
@@ -244,14 +254,16 @@ public class PlayerController : MonoBehaviour
         {
             GameManager.Instance.AddLife();
             other.gameObject.SetActive(false);
+            if (visuals != null) visuals.TriggerHealVisuals();
+            if (VFXManager.Instance != null) VFXManager.Instance.PlayPickupEffect(other.transform.position);
         }
 
         // 4. SCORE MULTIPLIER
         else if (other.CompareTag("Multiplier"))
         {
-            // Activate a x2 Score Multiplier
             GameManager.Instance.ActivateMultiplier(2f);
             other.gameObject.SetActive(false);
+            if (VFXManager.Instance != null) VFXManager.Instance.PlayPickupEffect(other.transform.position);
         }
     }
 
