@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
         currentLives = maxLives;
 
         // Grab the LevelManager to stop the world upon Game Over
-        levelManager = FindObjectOfType<LevelManager>();
+        levelManager = FindFirstObjectByType<LevelManager>();
     }
 
     private void Update()

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// Controls the player's 5-lane movement, jumping, and sliding for an Infinite Runner.
@@ -72,29 +73,32 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void HandleInput()
     {
+        // Safety check in case no keyboard is connected
+        if (Keyboard.current == null) return;
+
         // Lane Switching
-        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Keyboard.current.aKey.wasPressedThisFrame || Keyboard.current.leftArrowKey.wasPressedThisFrame)
         {
             SwitchLane(-1); // Move Left
         }
-        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        else if (Keyboard.current.dKey.wasPressedThisFrame || Keyboard.current.rightArrowKey.wasPressedThisFrame)
         {
             SwitchLane(1);  // Move Right
         }
 
         // Jumping
-        if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && isGrounded && !isSliding)
+        if ((Keyboard.current.wKey.wasPressedThisFrame || Keyboard.current.upArrowKey.wasPressedThisFrame) && isGrounded && !isSliding)
         {
             Jump();
         }
 
         // Sliding
-        if ((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) && isGrounded && !isSliding)
+        if ((Keyboard.current.sKey.wasPressedThisFrame || Keyboard.current.downArrowKey.wasPressedThisFrame) && isGrounded && !isSliding)
         {
             StartSlide();
         }
         // Allows player to fast-fall / slide while in the air (Optional, common in runners)
-        else if ((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) && !isGrounded)
+        else if ((Keyboard.current.sKey.wasPressedThisFrame || Keyboard.current.downArrowKey.wasPressedThisFrame) && !isGrounded)
         {
             verticalVelocity -= jumpForce; // Slam down quickly
             StartSlide();
