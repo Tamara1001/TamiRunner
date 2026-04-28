@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 696f81b7e5b6c6e4e9bf15fe207e76df
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363582
+  packageName: Fantasy character
+  packageVersion: 1.0
+  assetPath: Assets/Zimni/Fantasy character/animations/Fantasy_character_AnimatorController.controller
+  uploadId: 875702

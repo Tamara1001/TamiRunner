@@ -17,8 +17,9 @@ public class PlayerController : MonoBehaviour
     private bool isInvincible = false;
     private float iframeTimer = 0f;
 
-    [Header("Visuals")]
+    [Header("Visuals & Animation")]
     public PlayerVisuals visuals;
+    public Animator animator;
 
     [Header("Lane Settings")]
     [Tooltip("Distance in Unity units between each lane")]
@@ -124,12 +125,15 @@ public class PlayerController : MonoBehaviour
         isGrounded = false;
         verticalVelocity = jumpForce;
         if (visuals != null) visuals.TriggerJumpSquash();
+        if (animator != null) animator.SetTrigger("Jump");
     }
 
     private void StartSlide()
     {
         isSliding = true;
         slideTimer = slideDuration;
+
+        if (animator != null) animator.SetTrigger("Roll");
 
         // Shrink the collider to slide under obstacles
         capsuleCollider.height = slideHeight;

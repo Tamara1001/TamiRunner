@@ -25,6 +25,9 @@ public class GameManager : MonoBehaviour
     public float multiplierDuration = 5f;
     private float multiplierTimer = 0f;
 
+    [Header("Animation References")]
+    public Animator playerAnimator;
+
     // Reference to LevelManager to stop movement on Game Over
     private LevelManager levelManager;
 
@@ -119,6 +122,11 @@ public class GameManager : MonoBehaviour
     private void TriggerGameOver()
     {
         isGameOver = true;
+
+        if (playerAnimator != null)
+        {
+            playerAnimator.SetTrigger("Death");
+        }
 
         // Stop the world from moving
         if (levelManager != null)
