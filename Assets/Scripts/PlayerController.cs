@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
     private float iframeTimer = 0f;
 
     [Header("Visuals & Animation")]
-    public PlayerVisuals visuals;
+    public PlayerVisualsNew visuals;
     public Animator animator;
 
     [Header("Lane Settings")]
@@ -44,8 +44,6 @@ public class PlayerController : MonoBehaviour
     public float slideDuration = 1.0f;
     [Tooltip("Collider height when sliding")]
     public float slideHeight = 1.0f;
-    [Tooltip("Collider center when sliding")]
-    public Vector3 slideCenter = new Vector3(0, 0.5f, 0);
 
     private bool isSliding = false;
     private float slideTimer;
@@ -135,16 +133,20 @@ public class PlayerController : MonoBehaviour
 
         if (animator != null) animator.SetTrigger("Roll");
 
-        // Shrink the collider to slide under obstacles
+        // Dynamically calculate the new center so the bottom of the collider stays flush with the floor.
+        // We subtract the difference in height divided by 2 from the original Y center.
+        float heightDifference = originalHeight - slideHeight;
+        float newCenterY = originalCenter.y - (heightDifference / 2f);
+
         capsuleCollider.height = slideHeight;
-        capsuleCollider.center = slideCenter;
+        capsuleCollider.center = new Vector3(originalCenter.x, newCenterY, originalCenter.z);
     }
 
     private void StopSlide()
     {
         isSliding = false;
 
-        // Restore the original collider dimensions
+        // Safely restore the cached original collider dimensions
         capsuleCollider.height = originalHeight;
         capsuleCollider.center = originalCenter;
     }
