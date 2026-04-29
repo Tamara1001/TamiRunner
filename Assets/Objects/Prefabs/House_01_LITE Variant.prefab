@@ -52,6 +52,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: House_01_LITE Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 1122753798506363445, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2412730854640420142, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
       propertyPath: m_LODs.Array.data[1].renderers.Array.data[0].renderer
       value: 
@@ -60,10 +64,22 @@ PrefabInstance:
       propertyPath: m_LODs.Array.data[2].renderers.Array.data[0].renderer
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 2855728502542840335, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
+      propertyPath: m_Center.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3024561615174610013, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
+      propertyPath: m_Center.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3299933503858804145, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 238a8be72adf1284792c39a449bc1973, type: 2}
+    - target: {fileID: 5819484282745530213, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6456201959733892990, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
     - {fileID: 1180419995483928252, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
@@ -87,6 +103,22 @@ PrefabInstance:
     - {fileID: 7322918394391487127, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
     - {fileID: 1031039945472672259, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
     - {fileID: 2859351709374026888, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
+    - {fileID: 2278754635569972840, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
+    - {fileID: 5096453250154537673, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
+    - {fileID: 1099588559654896395, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
+    - {fileID: 592490180698705243, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
+    - {fileID: 1988133492010682044, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
+    - {fileID: 1320611669521675868, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
+    - {fileID: 1830327227148026058, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
+    - {fileID: 2712139323127654083, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
+    - {fileID: 4699527478780655643, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
+    - {fileID: 5004264892533961077, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
+    - {fileID: 3024561615174610013, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
+    - {fileID: 2855728502542840335, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
+    - {fileID: 5798445883095220145, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
+    - {fileID: 126697161171478662, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
+    - {fileID: 8603273228402242543, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
+    - {fileID: 2412730854640420142, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
     m_RemovedGameObjects:
     - {fileID: 2225680880843731221, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
     - {fileID: 4189693559814460036, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
@@ -119,6 +151,8 @@ PrefabInstance:
     - {fileID: 7507729923795683453, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
     - {fileID: 1870205164926645154, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
     - {fileID: 2201762029103611378, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
+    - {fileID: 7812182844788795621, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
+    - {fileID: 7541471773212705242, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e8261a97a7f761c4e8efce96a79a4a28, type: 3}

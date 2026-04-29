@@ -16,8 +16,6 @@ public class LevelManager : MonoBehaviour
     public int chunksOnScreen = 7;
 
     [Header("Movement Settings")]
-    [Tooltip("Speed the environment moves towards the camera.")]
-    public float moveSpeed = 20f;
     [Tooltip("The Z-coordinate at which a chunk is fully behind the player and ready to recycle.")]
     public float despawnThreshold = -60f;
 
@@ -74,7 +72,8 @@ public class LevelManager : MonoBehaviour
     /// </summary>
     private void MoveWorld()
     {
-        float step = moveSpeed * Time.deltaTime;
+        // Sync the world movement with the global dynamic speed
+        float step = GameManager.Instance.currentSpeed * Time.deltaTime;
 
         foreach (GameObject chunk in activeChunks)
         {

@@ -16,11 +16,15 @@ public class GameManager : MonoBehaviour
     public int maxLives = 3;
     public int currentLives;
 
+    [Header("Speed Settings")]
+    public float baseSpeed = 10f;
+    public float maxSpeed = 30f;
+    public float accelerationRate = 0.5f;
+    [HideInInspector] public float currentSpeed;
+
     [Header("Scoring")]
     public float score = 0f;
     public float currentTime = 0f;
-    [Tooltip("How much score is automatically added per second")]
-    public float baseScoreRate = 10f;
     public float currentScoreMultiplier = 1f;
 
     [Header("Multiplier Powerup")]
@@ -59,14 +63,21 @@ public class GameManager : MonoBehaviour
         if (currentState != GameState.Playing) return;
 
         currentTime += Time.deltaTime;
+        
+        // Dynamic Acceleration
+        if (currentSpeed < maxSpeed)
+        {
+            currentSpeed = Mathf.MoveTowards(currentSpeed, maxSpeed, accelerationRate * Time.deltaTime);
+        }
+
         HandleScoring();
         HandleMultiplierTimer();
     }
 
     private void HandleScoring()
     {
-        // Increase score passively over distance/time
-        score += baseScoreRate * currentScoreMultiplier * Time.deltaTime;
+        // Score is now strictly distance-based (Speed * Time)
+        score += currentSpeed * currentScoreMultiplier * Time.deltaTime;
     }
 
     private void HandleMultiplierTimer()
@@ -87,6 +98,12 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         currentState = GameState.Playing;
+        ResetSpeed();
+    }
+
+    public void ResetSpeed()
+    {
+        currentSpeed = baseSpeed;
     }
 
     public void AddScore(float amount)
@@ -121,6 +138,8 @@ public class GameManager : MonoBehaviour
         currentLives--;
         Debug.Log("Ouch! Lives remaining: " + currentLives);
 
+        ResetSpeed(); // Slow down upon hitting an obstacle
+
         if (currentLives <= 0)
         {
             TriggerGameOver();
@@ -145,9 +164,6 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.Save();
 
         // Stop the world from moving
-        if (levelManager != null)
-        {
-            levelManager.moveSpeed = 0f;
-        }
+        currentSpeed = 0f;
     }
 }
