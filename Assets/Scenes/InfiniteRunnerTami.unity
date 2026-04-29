@@ -393,6 +393,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 251364431}
   m_CullTransparentMesh: 1
+--- !u!114 &253144631 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9197159142029934340, guid: d47b228ee7c965443bf7f00fea7391df, type: 3}
+  m_PrefabInstance: {fileID: 4084535674165988370}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f4ebb8464c9a8d44a9c3d7be8cb4986, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -984,7 +995,6 @@ MonoBehaviour:
   - {fileID: 7731931246595981254, guid: 03aeb49089aee8c4cb58717de2ba8915, type: 3}
   chunkLength: 50
   chunksOnScreen: 5
-  moveSpeed: 20
   despawnThreshold: -60
 --- !u!4 &719991309
 Transform:
@@ -1182,6 +1192,63 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &853986819
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 853986821}
+  - component: {fileID: 853986820}
+  m_Layer: 0
+  m_Name: CurvedWorldManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &853986820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 853986819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e10b89daa3af274784b9ead0bdcf12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CurvedWorldManager
+  playerController: {fileID: 253144631}
+  sidewayStrengthRef: _SidewayStrength
+  backwardsStrengthRef: _BackwardsStrength
+  laneInfluenceMultiplier: -0.0015
+  laneSmoothingSpeed: 2
+  speedInfluenceMultiplier: 0.002
+  baseDownhillCurve: -0.001
+  phaseChangeInterval: 10
+  phaseSmoothingTime: 3
+  sidewaysPhaseRange: {x: -0.003, y: 0.003}
+  backwardsPhaseRange: {x: -0.001, y: 0.005}
+  noiseFrequency: 0.2
+  noiseAmplitude: {x: 0.0005, y: 0.0002}
+--- !u!4 &853986821
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 853986819}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.04208, y: -0.03222, z: -0.49822}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2336,9 +2403,12 @@ MonoBehaviour:
   currentState: 0
   maxLives: 3
   currentLives: 0
+  baseSpeed: 10
+  maxSpeed: 30
+  accelerationRate: 0.5
+  currentSpeed: 0
   score: 0
   currentTime: 0
-  baseScoreRate: 10
   currentScoreMultiplier: 1
   multiplierDuration: 5
   playerAnimator: {fileID: 331597249}
@@ -2864,4 +2934,5 @@ SceneRoots:
   - {fileID: 719991309}
   - {fileID: 1693307733}
   - {fileID: 2035279410}
+  - {fileID: 853986821}
   - {fileID: 1670036521}
