@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
 
     // We have 5 lanes: 0 (Far Left), 1 (Mid Left), 2 (Center), 3 (Mid Right), 4 (Far Right).
     private int currentLane = 2;
+    public int CurrentLane => currentLane;
 
     [Header("Jump Settings")]
     [Tooltip("Initial upward velocity when jumping")]
