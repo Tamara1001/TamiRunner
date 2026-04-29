@@ -7,28 +7,28 @@ using System.Collections;
 public class UIManager : MonoBehaviour
 {
     [Header("Panels (CanvasGroups)")]
-    public CanvasGroup startMenuPanel;
-    public CanvasGroup hudPanel;
-    public CanvasGroup gameOverPanel;
+    [SerializeField] private CanvasGroup startMenuPanel;
+    [SerializeField] private CanvasGroup hudPanel;
+    [SerializeField] private CanvasGroup gameOverPanel;
 
     [Header("Start Menu Elements")]
-    public TextMeshProUGUI bestScoreText;
-    public TextMeshProUGUI bestTimeText;
-    public Button playButton;
+    [SerializeField] private TextMeshProUGUI bestScoreText;
+    [SerializeField] private TextMeshProUGUI bestTimeText;
+    [SerializeField] private Button playButton;
 
     [Header("HUD Elements")]
-    public TextMeshProUGUI scoreText;
-    public TextMeshProUGUI livesText;
-    public TextMeshProUGUI timeText;
-    public TextMeshProUGUI multiplierText;
+    [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI livesText;
+    [SerializeField] private TextMeshProUGUI timeText;
+    [SerializeField] private TextMeshProUGUI multiplierText;
 
     [Header("Game Over Elements")]
-    public TextMeshProUGUI finalScoreText;
-    public TextMeshProUGUI finalTimeText;
-    public Button restartButton;
+    [SerializeField] private TextMeshProUGUI finalScoreText;
+    [SerializeField] private TextMeshProUGUI finalTimeText;
+    [SerializeField] private Button restartButton;
 
     [Header("Settings")]
-    public float fadeDuration = 0.5f;
+    [SerializeField] private float fadeDuration = 0.5f;
 
     private Coroutine multiplierPulseCoroutine;
     private bool isGameOverTriggered = false;
@@ -139,14 +139,27 @@ public class UIManager : MonoBehaviour
     private void SetPanelAlpha(CanvasGroup panel, float alpha, bool interactable)
     {
         if (panel == null) return;
+
+        // If we are making it visible, activate the GameObject first
+        if (alpha > 0f) panel.gameObject.SetActive(true);
+
         panel.alpha = alpha;
         panel.interactable = interactable;
         panel.blocksRaycasts = interactable;
+
+        // If we are hiding it completely, disable the GameObject
+        if (alpha <= 0f && !interactable) panel.gameObject.SetActive(false);
     }
 
     private IEnumerator FadePanel(CanvasGroup panel, float targetAlpha, bool makeInteractable)
     {
         if (panel == null) yield break;
+
+        // If we are fading IN, we MUST activate the GameObject first so the coroutine and rendering work!
+        if (targetAlpha > 0f)
+        {
+            panel.gameObject.SetActive(true);
+        }
 
         // Disable interaction immediately if fading out
         if (!makeInteractable)
@@ -172,6 +185,12 @@ public class UIManager : MonoBehaviour
         {
             panel.interactable = true;
             panel.blocksRaycasts = true;
+        }
+
+        // If we faded OUT completely, disable the GameObject to save performance
+        if (targetAlpha <= 0f)
+        {
+            panel.gameObject.SetActive(false);
         }
     }
 
