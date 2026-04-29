@@ -1,80 +1,210 @@
 using UnityEngine;
-using TMPro; // Required for modern Unity UI
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using TMPro;
+using System.Collections;
 
-/// <summary>
-/// Basic UI Manager to read and display data from the GameManager.
-/// </summary>
 public class UIManager : MonoBehaviour
 {
+    [Header("Panels (CanvasGroups)")]
+    public CanvasGroup startMenuPanel;
+    public CanvasGroup hudPanel;
+    public CanvasGroup gameOverPanel;
+
+    [Header("Start Menu Elements")]
+    public TextMeshProUGUI bestScoreText;
+    public TextMeshProUGUI bestTimeText;
+    public Button playButton;
+
     [Header("HUD Elements")]
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI livesText;
+    public TextMeshProUGUI timeText;
+    public TextMeshProUGUI multiplierText;
 
-    [Header("Game Over Screen")]
-    public GameObject gameOverPanel;
+    [Header("Game Over Elements")]
     public TextMeshProUGUI finalScoreText;
+    public TextMeshProUGUI finalTimeText;
+    public Button restartButton;
 
-    // Cache the GameManager reference
-    private GameManager gameManager;
+    [Header("Settings")]
+    public float fadeDuration = 0.5f;
+
+    private Coroutine multiplierPulseCoroutine;
+    private bool isGameOverTriggered = false;
 
     private void Start()
     {
-        // Grab the Singleton instance
-        gameManager = GameManager.Instance;
+        // 1. Initialize Panels
+        SetPanelAlpha(startMenuPanel, 1f, true);
+        SetPanelAlpha(hudPanel, 0f, false);
+        SetPanelAlpha(gameOverPanel, 0f, false);
 
-        // Ensure Game Over plane starts deactivated
-        if (gameOverPanel != null)
-        {
-            gameOverPanel.SetActive(false);
-        }
+        // 2. Load and Display PlayerPrefs
+        float bestScore = PlayerPrefs.GetFloat("HighScore", 0f);
+        float bestTime = PlayerPrefs.GetFloat("BestTime", 0f);
+        
+        if (bestScoreText != null) bestScoreText.text = $"Puntaje más alto: {Mathf.FloorToInt(bestScore)}";
+        if (bestTimeText != null) bestTimeText.text = $"Mejor tiempo: {FormatTime(bestTime)}";
+
+        // 3. Hide Multiplier Text Initially
+        if (multiplierText != null) multiplierText.gameObject.SetActive(false);
+
+        // 4. Hook up button events
+        if (playButton != null) playButton.onClick.AddListener(OnPlayClicked);
+        if (restartButton != null) restartButton.onClick.AddListener(OnRestartClicked);
     }
 
     private void Update()
     {
-        // Graceful fail-safe if the GameManager isn't initialized yet
-        if (gameManager == null) return;
+        if (GameManager.Instance == null) return;
 
-        UpdateHUD();
-
-        // Trigger the Game Over visual exactly once when death occurs
-        if (gameManager.isGameOver && gameOverPanel != null && !gameOverPanel.activeSelf)
+        // HUD Updates
+        if (GameManager.Instance.currentState == GameManager.GameState.Playing)
         {
-            DisplayGameOver();
+            UpdateHUD();
+            HandleMultiplierVFX();
+        }
+        else if (GameManager.Instance.currentState == GameManager.GameState.GameOver && !isGameOverTriggered)
+        {
+            isGameOverTriggered = true;
+            ShowGameOver();
         }
     }
 
-    /// <summary>
-    /// Continuously updates text values while playing.
-    /// Notice the null checks prevent the game crashing if you forget to assign text fields in the Inspector.
-    /// </summary>
+    // --- BUTTON ACTIONS ---
+
+    private void OnPlayClicked()
+    {
+        GameManager.Instance.StartGame();
+        
+        StartCoroutine(FadePanel(startMenuPanel, 0f, false));
+        StartCoroutine(FadePanel(hudPanel, 1f, true));
+    }
+
+    private void OnRestartClicked()
+    {
+        // Reloads the currently active scene to reset the entire world seamlessly
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    // --- HUD UPDATES ---
+
     private void UpdateHUD()
     {
-        if (scoreText != null)
-        {
-            // Round down the float to show a clean integer score
-            scoreText.text = "Score: " + Mathf.FloorToInt(gameManager.score).ToString();
-        }
+        if (scoreText != null) scoreText.text = $"Puntaje: {Mathf.FloorToInt(GameManager.Instance.score)}";
+        if (livesText != null) livesText.text = $"Vidas: {GameManager.Instance.currentLives}";
+        if (timeText != null) timeText.text = $"Tiempo: {FormatTime(GameManager.Instance.currentTime)}";
+    }
 
-        if (livesText != null)
+    private void HandleMultiplierVFX()
+    {
+        if (multiplierText == null) return;
+
+        // If multiplier is active but the text is hidden, show it and start pulsing
+        if (GameManager.Instance.currentScoreMultiplier > 1f && !multiplierText.gameObject.activeSelf)
         {
-            livesText.text = "Lives: " + gameManager.currentLives.ToString();
+            multiplierText.gameObject.SetActive(true);
+            if (multiplierPulseCoroutine != null) StopCoroutine(multiplierPulseCoroutine);
+            multiplierPulseCoroutine = StartCoroutine(PulseTextLoop(multiplierText.transform));
+        }
+        // If multiplier wears off, shrink it away safely
+        else if (GameManager.Instance.currentScoreMultiplier <= 1f && multiplierText.gameObject.activeSelf)
+        {
+            if (multiplierPulseCoroutine != null) StopCoroutine(multiplierPulseCoroutine);
+            StartCoroutine(ShrinkTextAway(multiplierText.transform));
         }
     }
 
-    /// <summary>
-    /// Halts standard UI updates and overlays the death screen.
-    /// </summary>
-    private void DisplayGameOver()
-    {
-        gameOverPanel.SetActive(true);
+    // --- GAME OVER ---
 
-        if (finalScoreText != null)
+    private void ShowGameOver()
+    {
+        StartCoroutine(FadePanel(hudPanel, 0f, false));
+        StartCoroutine(FadePanel(gameOverPanel, 1f, true));
+
+        if (finalScoreText != null) finalScoreText.text = $"Puntaje Final: {Mathf.FloorToInt(GameManager.Instance.score)}";
+        if (finalTimeText != null) finalTimeText.text = $"Tiempo Final: {FormatTime(GameManager.Instance.currentTime)}";
+    }
+
+    // --- UTILITIES & COROUTINES ---
+
+    private string FormatTime(float timeInSeconds)
+    {
+        int minutes = Mathf.FloorToInt(timeInSeconds / 60f);
+        int seconds = Mathf.FloorToInt(timeInSeconds % 60f);
+        return string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
+    private void SetPanelAlpha(CanvasGroup panel, float alpha, bool interactable)
+    {
+        if (panel == null) return;
+        panel.alpha = alpha;
+        panel.interactable = interactable;
+        panel.blocksRaycasts = interactable;
+    }
+
+    private IEnumerator FadePanel(CanvasGroup panel, float targetAlpha, bool makeInteractable)
+    {
+        if (panel == null) yield break;
+
+        // Disable interaction immediately if fading out
+        if (!makeInteractable)
         {
-            finalScoreText.text = "Final Score: " + Mathf.FloorToInt(gameManager.score).ToString();
+            panel.interactable = false;
+            panel.blocksRaycasts = false;
         }
 
-        // Hide the active HUD to clean up the screen
-        if (scoreText != null) scoreText.gameObject.SetActive(false);
-        if (livesText != null) livesText.gameObject.SetActive(false);
+        float startAlpha = panel.alpha;
+        float elapsed = 0f;
+
+        while (elapsed < fadeDuration)
+        {
+            panel.alpha = Mathf.Lerp(startAlpha, targetAlpha, elapsed / fadeDuration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        panel.alpha = targetAlpha;
+
+        // Enable interaction only after full fade-in
+        if (makeInteractable)
+        {
+            panel.interactable = true;
+            panel.blocksRaycasts = true;
+        }
+    }
+
+    // Pulses the text endlessly using PingPong
+    private IEnumerator PulseTextLoop(Transform textTransform)
+    {
+        Vector3 minScale = Vector3.one * 0.8f;
+        Vector3 maxScale = Vector3.one * 1.2f;
+        float pulseSpeed = 4f;
+        
+        while (true)
+        {
+            float scale = Mathf.PingPong(Time.time * pulseSpeed, 1f);
+            textTransform.localScale = Vector3.Lerp(minScale, maxScale, scale);
+            yield return null;
+        }
+    }
+
+    // Shrinks the text down to 0 before hiding it
+    private IEnumerator ShrinkTextAway(Transform textTransform)
+    {
+        Vector3 startScale = textTransform.localScale;
+        float elapsed = 0f;
+        float shrinkDuration = 0.3f;
+
+        while (elapsed < shrinkDuration)
+        {
+            textTransform.localScale = Vector3.Lerp(startScale, Vector3.zero, elapsed / shrinkDuration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        
+        textTransform.localScale = Vector3.zero;
+        textTransform.gameObject.SetActive(false);
     }
 }

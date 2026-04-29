@@ -8,8 +8,9 @@ public class GameManager : MonoBehaviour
     // Singleton Instance
     public static GameManager Instance { get; private set; }
 
+    public enum GameState { Menu, Playing, GameOver }
     [Header("Game State")]
-    public bool isGameOver = false;
+    public GameState currentState = GameState.Menu;
 
     [Header("Player Vitals")]
     public int maxLives = 3;
@@ -17,6 +18,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Scoring")]
     public float score = 0f;
+    public float currentTime = 0f;
     [Tooltip("How much score is automatically added per second")]
     public float baseScoreRate = 10f;
     public float currentScoreMultiplier = 1f;
@@ -54,8 +56,9 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (isGameOver) return;
+        if (currentState != GameState.Playing) return;
 
+        currentTime += Time.deltaTime;
         HandleScoring();
         HandleMultiplierTimer();
     }
@@ -79,17 +82,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // --- API CALLED BY THE PLAYER CONTROLLER ---
+    // --- API CALLED BY THE UI & PLAYER CONTROLLER ---
+
+    public void StartGame()
+    {
+        currentState = GameState.Playing;
+    }
 
     public void AddScore(float amount)
     {
-        if (isGameOver) return;
+        if (currentState != GameState.Playing) return;
         score += amount;
     }
 
     public void AddLife()
     {
-        if (isGameOver) return;
+        if (currentState != GameState.Playing) return;
 
         currentLives++;
         if (currentLives > maxLives)
@@ -100,7 +108,7 @@ public class GameManager : MonoBehaviour
 
     public void ActivateMultiplier(float amount)
     {
-        if (isGameOver) return;
+        if (currentState != GameState.Playing) return;
 
         currentScoreMultiplier = amount;
         multiplierTimer = multiplierDuration;
@@ -108,7 +116,7 @@ public class GameManager : MonoBehaviour
 
     public void TakeDamage()
     {
-        if (isGameOver) return;
+        if (currentState != GameState.Playing) return;
 
         currentLives--;
         Debug.Log("Ouch! Lives remaining: " + currentLives);
@@ -121,19 +129,25 @@ public class GameManager : MonoBehaviour
 
     private void TriggerGameOver()
     {
-        isGameOver = true;
+        currentState = GameState.GameOver;
 
         if (playerAnimator != null)
         {
             playerAnimator.SetTrigger("Death");
         }
 
+        // Save records
+        float bestScore = PlayerPrefs.GetFloat("HighScore", 0f);
+        if (score > bestScore) PlayerPrefs.SetFloat("HighScore", score);
+
+        float bestTime = PlayerPrefs.GetFloat("BestTime", 0f);
+        if (currentTime > bestTime) PlayerPrefs.SetFloat("BestTime", currentTime);
+        PlayerPrefs.Save();
+
         // Stop the world from moving
         if (levelManager != null)
         {
             levelManager.moveSpeed = 0f;
         }
-
-        Debug.Log($"GAME OVER! The Royal Guard caught Ambu! Final Score: {Mathf.FloorToInt(score)}");
     }
 }

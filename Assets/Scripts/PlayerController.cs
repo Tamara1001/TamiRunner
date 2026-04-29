@@ -75,6 +75,9 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void HandleInput()
     {
+        // Block input if game has not started or is over
+        if (GameManager.Instance.currentState != GameManager.GameState.Playing) return;
+
         // Safety check in case no keyboard is connected
         if (Keyboard.current == null) return;
 

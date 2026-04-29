@@ -41,6 +41,9 @@ public class LevelManager : MonoBehaviour
 
     private void Update()
     {
+        // Halt level generation and movement if we are not playing
+        if (GameManager.Instance.currentState != GameManager.GameState.Playing) return;
+
         MoveWorld();
         CheckRecycle();
     }
